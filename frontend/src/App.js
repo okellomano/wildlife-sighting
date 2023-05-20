@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function App() {
+export default function App() {
   const [wildlife, setWildlife] = useState([]);
   const [filteredWildlife, setFilteredWildlife] = useState([]);
   const [speciesOptions, setSpeciesOptions] = useState([]);
@@ -91,5 +91,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
