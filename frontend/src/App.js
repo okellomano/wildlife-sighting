@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-
 function App() {
   const [wildlife, setWildlife] = useState([]);
   const [filteredWildlife, setFilteredWildlife] = useState([]);
@@ -14,58 +13,80 @@ function App() {
   }, []);
 
   const fetchWildlife = async () => {
-    try{
+    try {
       const response = await axios.get('http://127.0.0.1:8000/api/v1/all/');
       setWildlife(response.data);
       setFilteredWildlife(response.data);
-    } catch (error){
+    } catch (error) {
       console.log('Error fetching wildlife data', error);
     }
   };
 
   const fetchSpeciesOptions = async () => {
-    try{
+    try {
       const response = await axios.get('http://127.0.0.1:8000/api/v1/all/?search=<species>');
       setSpeciesOptions(response.data);
     } catch (error) {
-      console.log('Error fetching species options', error)
+      console.log('Error fetching species options', error);
     }
   };
 
-  const handleFilterChange = event => {
-    const animal_species = event.target.value;
-    setSelectedSpecies(animal_species);
+  const handleFilterChange = (event) => {
+    const animalSpecies = event.target.value;
+    setSelectedSpecies(animalSpecies);
 
-    if (animal_species === 'all') {
+    if (animalSpecies === 'all') {
       setFilteredWildlife(wildlife);
     } else {
-      const filtered = wildlife.filter(item => item.animal_species === animal_species);
-      setFilteredWildlife(filtered)
+      const filtered = wildlife.filter((item) => item.animal_species === animalSpecies);
+      setFilteredWildlife(filtered);
     }
   };
 
-  return(
-    <div className='App'>
-      <h1>Wildlife Sighting</h1>
+  const formatDate = (date) => {
+    return new Date(date).toLocaleDateString();
+  };
 
-      <div>
-        <label htmlFor='species-filter'>Filter by Species:</label>
-        <select id="species-filter" value={selectedSpecies} onChange={handleFilterChange}>
-          <option value='all'>All</option>
-          {speciesOptions.map(option => (
-            <option key={option.id} value={option.animal_species}>{option.animal_species}</option>
-          ))}
-        </select>
-      </div>
+  const formatTime = (date) => {
+    return new Date(date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
 
-      <div>
-        <ul>
-          {filteredWildlife.map(item => (
-            <li key={item.id}>
-              <strong>{item.animal_species}</strong>  - <small>Date and Time: {item.sighting_datetime}</small>
-            </li>
-          ))}
-        </ul>
+  return (
+    <div className="App">
+      <div className="container">
+        <h1 className="app-header">
+          The application allows users to track and record wildlife sightings in a specific conservation area.
+        </h1>
+        <div className="filter-option">
+          <label htmlFor="species-filter">Filter by Species:</label>
+          <select id="species-filter" value={selectedSpecies} onChange={handleFilterChange}>
+            <option value="all">All</option>
+            {speciesOptions.map((option) => (
+              <option key={option.id} value={option.animal_species}>
+                {option.animal_species}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Species</th>
+              <th>Date</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredWildlife.map((item) => (
+              <tr key={item.id}>
+                <td>{item.animal_species}</td>
+                <td>{formatDate(item.sighting_datetime)}</td>
+                <td>{formatTime(item.sighting_datetime)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
