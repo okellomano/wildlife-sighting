@@ -10,7 +10,6 @@ install-pre-commit:
 lint:
 	poetry run pre-commit run --all-files
 
-
 .PHONY: run-server
 run-server:
 	poetry run python manage.py runserver
