@@ -5,7 +5,7 @@ from .models import Sightings
 from .serializers import SightingsSerializer
 
 
-class AllSightings(generics.ListAPIView):
+class AllSightings(generics.ListCreateAPIView):
     queryset = Sightings.objects.all()
     serializer_class = SightingsSerializer
     # filter_backends = [SearchFilter]
